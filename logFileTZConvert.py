@@ -106,7 +106,7 @@ def convertTimezone(dateString, timez):
 
 
 
-def parseLine(line, timezone):
+def parseLine(line, timezone, o):
 
     a = []
     a = line.split(',')
@@ -117,7 +117,7 @@ def parseLine(line, timezone):
 # should just print
 ###
     if ('Offset' in a[Offset]):
-        print ",".join(a)
+        o.write(",".join(a))
 
 
 ###
@@ -132,14 +132,15 @@ def parseLine(line, timezone):
         a[FN_ATime] = str(convertTimezone(a[FN_ATime], timezone))
         a[FN_MTime] = str(convertTimezone(a[FN_MTime], timezone))
         a[FN_RTime] = str(convertTimezone(a[FN_RTime], timezone))
-        print ",".join(a)
+        o.write(",".join(a))
 
 
 def main():
 
-    usage = "usage: %prog -f filename [-z timezone]\n or .. usage: %prog -l (to list timezones)"
+    usage = "usage: %prog -f filename [-z timezone] [-o outputFile]\n or .. usage: %prog -l (to list timezones)"
     parser = OptionParser(usage) 
     parser.add_option("-f", dest="inputFile", help="Input File")
+    parser.add_option("-o", dest="outputFile", help="Output File")
     parser.add_option("-z", dest="timezone", action="store", help="TZ")
     parser.add_option("-l", dest="printTZList", action="store_true") 
     (options, args) = parser.parse_args()
@@ -157,13 +158,18 @@ def main():
     try:
         
         f = open(options.inputFile,'r')
+        if (options.outputFile):
+            o = open(options.outputFile, 'w')
+        else:
+            o = sys.stdout
 
         for line in f:
 
-            print line
             line.rstrip('\r\n')
-            parseLine(line, options.timezone)
-
+            parseLine(line, options.timezone, o)
+        
+        if (o):
+            o.close
         f.close
 
     except Exception, e:
