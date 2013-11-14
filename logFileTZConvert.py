@@ -109,7 +109,7 @@ def convertTimezone(dateString, timez):
 def parseLine(line, timezone, o):
 
     a = []
-    a = line.split(',')
+    a = line.split('|')
 
 ###
 # if the line starts with 'Offset'
@@ -117,7 +117,7 @@ def parseLine(line, timezone, o):
 # should just print
 ###
     if ('Offset' in a[Offset]):
-        o.write(",".join(a))
+        o.write("|".join(a))
 
 
 ###
@@ -132,7 +132,7 @@ def parseLine(line, timezone, o):
         a[FN_ATime] = str(convertTimezone(a[FN_ATime], timezone))
         a[FN_MTime] = str(convertTimezone(a[FN_MTime], timezone))
         a[FN_RTime] = str(convertTimezone(a[FN_RTime], timezone))
-        o.write(",".join(a))
+        o.write("|".join(a))
 
 
 def main():
